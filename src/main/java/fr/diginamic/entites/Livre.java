@@ -1,6 +1,7 @@
 package fr.diginamic.entites;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table (name = "livre")
@@ -15,6 +16,13 @@ public class Livre {
 
     @Column (name = "AUTEUR")
     private String auteur;
+
+    @ManyToMany
+    @JoinTable (name = "compo",
+            joinColumns = @JoinColumn (name = "ID_LIV", referencedColumnName = "ID"),
+            inverseJoinColumns = @JoinColumn (name = "ID_EMP", referencedColumnName = "ID")
+    )
+    private List<Emprunt> emprunts;
 
     public Livre() {}
     public Livre(String titre, String auteur) {
