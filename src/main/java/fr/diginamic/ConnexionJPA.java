@@ -29,8 +29,11 @@ public class ConnexionJPA {
 
         List<Region> listeRegion = em.createQuery("SELECT r FROM Region r", Region.class).getResultList();
         for (Region region : listeRegion) {
-            System.out.println(region + " ");
+            System.out.println(region);
         }
+
+        entityManagerFactory.close();
+        em.close();
 
     }
 
