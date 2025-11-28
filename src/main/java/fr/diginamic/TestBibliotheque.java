@@ -7,6 +7,7 @@ import fr.diginamic.entites.Livre;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 public class TestBibliotheque {
@@ -25,14 +26,18 @@ public class TestBibliotheque {
         System.out.println("------------------------------------------------------------------------------------------------");
 
         // Réaliser une requête qui permet d’extraire tous les emprunts d’un client donné.
-        String nomDuClientChoisi = "Brigand";
-        Client clientChoisi = em.createQuery("FROM Client c WHERE c.nom ='" + nomDuClientChoisi + "'", Client.class).getSingleResult();
-        List<Emprunt> empruntsClientChoisi = em.createQuery("SELECT emp from Emprunt emp WHERE emp.client =" + clientChoisi.getId(), Emprunt.class).getResultList();
+        TypedQuery<Client> premiereRequete = em.createQuery("FROM Client c WHERE c.nom = :nom", Client.class);
+        Client clientChoisi = premiereRequete.setParameter("nom", "Brigand").getSingleResult();
+        TypedQuery<Emprunt> secondeRequete = em.createQuery("SELECT emp from Emprunt emp WHERE emp.client = :client", Emprunt.class);
+        List<Emprunt> empruntsClientChoisi = secondeRequete.setParameter("client", clientChoisi).getResultList();
         for (Emprunt emp : empruntsClientChoisi) {
             for (Livre livre : emp.getLivres()){
                 System.out.println(livre);
             }
         }
+
+        entityManagerFactory.close();
+        em.close();
 
     }
 
